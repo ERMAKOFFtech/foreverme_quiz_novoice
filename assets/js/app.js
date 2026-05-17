@@ -276,7 +276,7 @@ const flow = [
     {
         type: 'loader',
         id: 'loader1',
-        duration: 7600,
+        duration: 4200,
         title: 'Psychologists identify the “Third Death” as the moment the last living memory of a person vanishes.',
         description: 'Based on your answers, Your Loved One’s digital legacy is at risk.\nWe are calculating your Heritage Protection Plan.',
         score: '81%',
@@ -669,7 +669,7 @@ function finalizeLoaderRows(statusEls, onDone) {
     let index = 0;
     const markNext = () => {
         if (index >= statusEls.length) {
-            setTimeout(() => onDone(), 300);
+            setTimeout(() => onDone(), 150);
             return;
         }
         const statusEl = statusEls[index];
@@ -677,7 +677,7 @@ function finalizeLoaderRows(statusEls, onDone) {
         statusEl.classList.add('is-done');
         statusEl.innerHTML = '<span class="done-check" aria-hidden="true">✓</span><span class="status-text">Analysis complete</span>';
         index += 1;
-        setTimeout(markNext, 325);
+        setTimeout(markNext, 170);
     };
     markNext();
 }
@@ -872,14 +872,10 @@ function renderEmail() {
       <p class="form-note mb-4">
         Start your free trial.
       </p>
-      <div class="promo-code-banner mb-4" id="promoCodeBanner">
+      <div class="promo-code-banner promo-code-applied mb-4" id="promoCodeBanner">
         <div class="promo-code-headline">Your Enhanced Trial Code</div>
         <div class="promo-code-row">
           <div class="promo-code-value">${randomPromoCode}</div>
-          <button class="promo-apply-btn" type="button" id="promoApplyBtn">
-            <span class="promo-apply-icon" aria-hidden="true">✓</span>
-            <span>Apply</span>
-          </button>
         </div>
         <div class="promo-code-label" id="promoTimerLabel">Promo code applied</div>
       </div>
@@ -907,18 +903,13 @@ function renderEmail() {
   `;
 
   const input = document.getElementById('emailInput');
-  const promoApplyBtn = document.getElementById('promoApplyBtn');
-
   const promoTimerLabel = document.getElementById('promoTimerLabel');
   const promoCodeBanner = document.getElementById('promoCodeBanner');
   const promoAppliedNote = document.getElementById('promoAppliedNote');
 
-  promoApplyBtn.addEventListener('click', () => {
-    promoApplyBtn.disabled = true;
-    promoCodeBanner.classList.add('promo-code-applied');
-    promoTimerLabel.textContent = 'Promo code applied';
-    promoAppliedNote.classList.remove('hidden');
-  });
+  promoCodeBanner.classList.add('promo-code-applied');
+  promoTimerLabel.textContent = 'Promo code applied';
+  promoAppliedNote.classList.remove('hidden');
 
     const validate = () => {
         state.email = input.value.trim();
