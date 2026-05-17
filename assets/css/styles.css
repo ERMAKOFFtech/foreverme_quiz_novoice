@@ -296,7 +296,7 @@ body {
 }
 .interstitial-logo-list.floating {
     position: relative;
-    height: 310px;
+    height: 240px;
     max-width: 640px;
     margin-bottom: 4px;
 }
@@ -335,10 +335,10 @@ body {
 }
 .float-logo-1 { top: 6px; left: 4%; animation-delay: 0s; }
 .float-logo-2 { top: 32px; right: 7%; animation-delay: -1.2s; }
-.float-logo-3 { top: 96px; left: 16%; animation-delay: -2.4s; }
-.float-logo-4 { top: 210px; right: 5%; animation-delay: -3.2s; }
-.float-logo-5 { bottom: 3px; left: 7%; animation-delay: -0.8s; }
-.float-logo-6 { top: 110px; right: 2%; animation-delay: -2.8s; }
+.float-logo-3 { top: 71px; left: 8%; animation-delay: -2.4s; }
+.float-logo-4 { top: 155px; right: 3%; animation-delay: -3.2s; }
+.float-logo-5 { bottom: -18px; left: 3%; animation-delay: -0.8s; }
+.float-logo-6 { top: 85px; right: 2%; animation-delay: -2.8s; }
 
 @keyframes logo-float {
     0%, 100% { transform: translateY(0); }
@@ -1264,7 +1264,7 @@ body {
     .sticky-hint { display: none; }
     .btn-main { min-width: 96px; }
     .btn-ghost { min-width: 64px; }
-    .interstitial-card blockquote { font-size: 0.98rem; }
+    .interstitial-card blockquote { font-size: 14px; }
     .age-grid { grid-template-columns: 1fr 1fr; }
 }
 

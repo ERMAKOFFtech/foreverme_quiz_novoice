@@ -3,7 +3,7 @@ const flow = [
         type: 'ageGate',
         id: 'ageGate',
         title: 'Choose your age group', 
-        note: 'By continuing, you confirm you have read and agreed to our <a href="/privacy">Terms of Use</a>, Privacy Policy, and Refund Policy.',
+        note: 'By continuing, you confirm you have read and agreed to our <a href="/privacy">Terms of Use, Privacy Policy, and Refund Policy.</a>',
         options: [
             { label: '25-49', value: '25_49' },
             { label: '50-59', value: '50_59' },
@@ -46,9 +46,7 @@ const flow = [
         image: '/assets/quiz/start-super-trial/img/spec_pause_1.jpg',
         heading: 'Good people make the world a better place!',
         body: [
-            'We’re glad you are here.',
-            'This journey is intended to help you better understand your patterns and structure your experiences.',
-            'We recommend treating this quiz as a moment of honest reflection on your loved ones and your own essence and heritage.'
+            'We’re glad you’re here. This journey helps you reflect on your loved ones, your own essence, and your heritage — so you can better understand your patterns and structure your experiences.'
         ],
         buttonText: 'Continue'
     },
@@ -462,6 +460,7 @@ function renderAgeGate(item) {
     host.innerHTML = `
     <section class="screen-card age-gate-card fade-in">
                 <div class="eyebrow">3-MINUTE QUIZ - ONE ETERNAL MEMORY</div>
+                <p>Choose your age group to continue.</p>
       <div class="age-grid">
         ${item.options.map(opt => `
           <button class="age-option" type="button" data-value="${opt.value}">
