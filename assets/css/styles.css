@@ -897,7 +897,7 @@ body {
     background: linear-gradient(45deg, #0f9f65 0%, #5dcf9c 100%);
 }
 .promo-applied-note {
-    margin-top: 12px;
+    margin-bottom: 10px;
     border-radius: 14px;
     background: #fff;
     color: #1f2937;
@@ -1187,7 +1187,9 @@ body {
         width: 100%;
         margin-bottom: 12px;
     }
-    .interstitial-card blockquote { font-size: 1.05rem; line-height: 1.35; }
+    .interstitial-card blockquote { 
+      font-size: 14px;
+      line-height: 1.25;}
     .interstitial-card cite, .interstitial-card .continue-tip { font-size: 0.84rem; }
     .interstitial-continue-btn {
         height: 44px;
