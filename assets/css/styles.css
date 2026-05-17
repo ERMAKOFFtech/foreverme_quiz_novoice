@@ -324,7 +324,7 @@ body {
 }
 .logo-chip-icon {
     width: 100%;
-    max-width: 220px;
+    max-width: 187px;
     height: auto;
     box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12);
 }
@@ -435,7 +435,7 @@ body {
 }
 .age-photo {
     width: 100%;
-    max-width: 220px;
+    max-width: 187px;
     aspect-ratio: 4 / 4;
     border-radius: 999px;
     border: 2px solid rgba(17,24,39,0.09);
@@ -566,7 +566,7 @@ body {
     height: 6px;
     border-radius: 50%;
     background: #9ca3af;
-    animation: pulse 1.2s infinite ease-in-out;
+    animation: pulse 0.6s infinite ease-in-out;
 }
 .pulse-dots span:nth-child(2) { animation-delay: .18s; }
 .pulse-dots span:nth-child(3) { animation-delay: .36s; }
