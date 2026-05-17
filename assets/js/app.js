@@ -314,7 +314,8 @@ const state = {
     answers: {},
     selectedValue: null,
     email: '',
-    ageGroup: null
+    ageGroup: null,
+    registrationStartedTracked: false
 };
 
 
@@ -916,6 +917,13 @@ function renderEmail() {
         }
     };
   input.addEventListener('input', validate);
+  input.addEventListener('focus', () => {
+      if (state.registrationStartedTracked) return;
+      state.registrationStartedTracked = true;
+      gtag('event', 'quiz_registration_started__novoice', {
+          quiz_name: 'personality_quiz'
+      });
+  }, { once: true });
   validate();
 
   setSticky({
@@ -1476,6 +1484,16 @@ window.addEventListener('beforeunload', function() {
                 completion_rate: completionRate,
                 answers_count: answeredQuestionsCount
             });
+    }
+
+    if (isOnEmail) {
+        gtag('event', 'quiz_abandoned_email_novoice', {
+            quiz_name: 'personality_quiz',
+            last_question: answeredQuestionsCount,
+            total_questions: totalQuestions,
+            completion_rate: Math.round((answeredQuestionsCount / totalQuestions) * 100),
+            answers_count: answeredQuestionsCount
+        });
     }
 });
 window.registerUser = async function() {
