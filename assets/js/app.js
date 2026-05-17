@@ -299,10 +299,6 @@ const flow = [
         buttonText: 'Continue'
     },
     {
-        type: 'voiceDemo',
-        id: 'voiceDemo'
-    },
-    {
         type: 'email',
         id: 'email'
     },
@@ -340,7 +336,7 @@ let timerSeconds = 10 * 60;
 let timerInterval = null;
 let promoTimerInterval = null;
 let interstitialSliderInterval = null;
-gtag('event', 'quiz_started', {
+gtag('event', 'quiz_started_novoice', {
     quiz_name: 'personality_quiz',
     total_questions: totalQuestions
 });
@@ -429,7 +425,7 @@ function renderQuestion(item) {
             const progressPercent = Math.round((qNumber / totalQuestions) * 100);
 
 
-                gtag('event', 'quiz_question_answered', {
+                gtag('event', 'quiz_question_answered_novoice', {
                     quiz_name: 'personality_quiz',
                     question_number: qNumber,
                     question_key: item.id,
@@ -673,7 +669,7 @@ function finalizeLoaderRows(statusEls, onDone) {
     let index = 0;
     const markNext = () => {
         if (index >= statusEls.length) {
-            setTimeout(() => onDone(), 600);
+            setTimeout(() => onDone(), 300);
             return;
         }
         const statusEl = statusEls[index];
@@ -681,21 +677,21 @@ function finalizeLoaderRows(statusEls, onDone) {
         statusEl.classList.add('is-done');
         statusEl.innerHTML = '<span class="done-check" aria-hidden="true">✓</span><span class="status-text">Analysis complete</span>';
         index += 1;
-        setTimeout(markNext, 650);
+        setTimeout(markNext, 325);
     };
     markNext();
 }
 
 
 
-function renderVoiceDemo() {
+function renderVoiceDemo(targetHost = host) {
     const maxBytes = 1024 * 1024;
     const maxRecordMs = 20000;
     const fixedText = `I cherish my loved ones and want our stories to live forever. This is more than just a recording or dusty pictures — it’s about preserving our wisdom and our history. With ForeverMe, I’m making sure our voices and personalities are never lost. This is my gift to the next generation.`;
     const acceptedTypes = ['audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/x-m4a', 'audio/webm', 'audio/ogg'];
     const acceptedTypePrefixes = ['audio/webm', 'audio/mp4', 'audio/ogg'];
 
-    host.innerHTML = `
+    targetHost.innerHTML = `
     <section class="screen-card voice-demo-card fade-in">
       <div class="eyebrow">Voice preview</div>
       <h2 class="question-title">Hear how your avatar can sound</h2>
@@ -854,14 +850,17 @@ function renderVoiceDemo() {
         }
     });
 
-    setSticky({
-        stepLabel: 'Voice preview',
-        hint: '',
-        continueText: 'Start Free Trial',
-        continueDisabled: false,
-        backHidden: false
-    });
+    if (targetHost === host) {
+      setSticky({
+          stepLabel: 'Voice preview',
+          hint: '',
+          continueText: 'Start Free Trial',
+          continueDisabled: false,
+          backHidden: false
+      });
+    }
 }
+
 
 function renderEmail() {
   const randomPromoCode = `TRIAL-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
@@ -882,10 +881,7 @@ function renderEmail() {
             <span>Apply</span>
           </button>
         </div>
-        <div class="promo-timer-wrap" id="promoTimerWrap">
-          <div class="promo-timer-bar" id="promoTimerBar"></div>
-        </div>
-        <div class="promo-code-label" id="promoTimerLabel">Promo code active: 60 sec</div>
+        <div class="promo-code-label" id="promoTimerLabel">Promo code applied</div>
       </div>
       <div class="promo-applied-note hidden" id="promoAppliedNote">This promo code gave you increased trial limits.</div>
 
@@ -912,37 +908,12 @@ function renderEmail() {
 
   const input = document.getElementById('emailInput');
   const promoApplyBtn = document.getElementById('promoApplyBtn');
-  const promoTimerBar = document.getElementById('promoTimerBar');
-  const promoTimerWrap = document.getElementById('promoTimerWrap');
+
   const promoTimerLabel = document.getElementById('promoTimerLabel');
   const promoCodeBanner = document.getElementById('promoCodeBanner');
   const promoAppliedNote = document.getElementById('promoAppliedNote');
 
-  if (promoTimerInterval) {
-    clearInterval(promoTimerInterval);
-    promoTimerInterval = null;
-  }
-
-  let promoRemainingSeconds = 60;
-  promoTimerBar.style.width = '100%';
-  promoTimerInterval = setInterval(() => {
-    promoRemainingSeconds = Math.max(0, promoRemainingSeconds - 1);
-    const pct = (promoRemainingSeconds / 60) * 100;
-    promoTimerBar.style.width = `${pct}%`;
-    promoTimerLabel.textContent = `Promo code active: ${promoRemainingSeconds} sec`;
-    if (promoRemainingSeconds === 0) {
-      clearInterval(promoTimerInterval);
-      promoTimerInterval = null;
-      promoTimerLabel.textContent = 'Last chance !';
-    }
-  }, 1000);
-
   promoApplyBtn.addEventListener('click', () => {
-    if (promoTimerInterval) {
-      clearInterval(promoTimerInterval);
-      promoTimerInterval = null;
-    }
-    promoTimerWrap.classList.add('hidden');
     promoApplyBtn.disabled = true;
     promoCodeBanner.classList.add('promo-code-applied');
     promoTimerLabel.textContent = 'Promo code applied';
@@ -1057,6 +1028,20 @@ function renderPaywall() {
       </div>
 
       <div class="paywall-block">
+        <details class="demo-accordion">
+          <summary>
+            <span class="demo-summary-icon" aria-hidden="true"><i class="bi bi-mic"></i></span>
+            <span>
+              <strong>Clone your loved one's voice (optional)</strong>
+              <small>Open to upload or record a short sample.</small>
+            </span>
+            <span class="demo-summary-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
+          </summary>
+          <div id="paywallVoiceDemo"></div>
+        </details>
+      </div>
+
+      <div class="paywall-block">
         <h3>How it works</h3>
         <ol class="how-list">
           <li>
@@ -1112,6 +1097,7 @@ function renderPaywall() {
   `;
 
     setSticky({ show: false });
+    renderVoiceDemo(document.getElementById('paywallVoiceDemo'));
     initStripeCheckout();
 }
 
@@ -1292,7 +1278,7 @@ async function handleStripeSubmit() {
             if (error) {
                 showToast(error.message, 'danger');
             } else if (paymentIntent.status === 'succeeded') {
-                gtag('event', 'quiz_purchase_complete', {
+                gtag('event', 'quiz_purchase_complete_novoice', {
                     value: 29.99,
                     currency: 'USD',
                     transaction_id: paymentIntent.id
@@ -1338,13 +1324,12 @@ function renderCurrentStep() {
   stopInterstitialSlider();
 
   const item = flow[state.step];
-  heroNote.classList.toggle('hidden', state.step > 0 || item.type === 'ageGate');
+  heroNote.classList.toggle('hidden', state.step > 0);
 
   if (item.type === 'question') return renderQuestion(item);
   if (item.type === 'ageGate') return renderAgeGate(item);
   if (item.type === 'interstitial') return renderInterstitial(item);
   if (item.type === 'loader') return animateLoader(item);
-  if (item.type === 'voiceDemo') return renderVoiceDemo();
   if (item.type === 'email') return renderEmail();
   if (item.type === 'paywall') return renderPaywall();
 }
@@ -1492,17 +1477,16 @@ window.addEventListener('beforeunload', function() {
     const currentStep = flow[state.step];
     const isOnPaywall = currentStep?.type === 'paywall';
     const isOnEmail = currentStep?.type === 'email';
-    const isOnVoiceDemo = currentStep?.type === 'voiceDemo';
 
     const answeredQuestionsCount = Object.keys(state.answers).filter(key => /^q\d+$/.test(key)).length;
     const isQuizCompleted = answeredQuestionsCount === totalQuestions;
 
-    if (!isOnPaywall && !isQuizCompleted && !isOnEmail && !isOnVoiceDemo) {
+    if (!isOnPaywall && !isQuizCompleted && !isOnEmail) {
         const lastQuestionNumber = answeredQuestionsCount;
         const completionRate = Math.round((answeredQuestionsCount / totalQuestions) * 100);
 
 
-            gtag('event', 'quiz_abandoned', {
+            gtag('event', 'quiz_abandoned_novoice', {
                 quiz_name: 'personality_quiz',
                 last_question: lastQuestionNumber,
                 total_questions: totalQuestions,
@@ -1534,7 +1518,7 @@ window.registerUser = async function() {
 
             const totalAnswersCount = Object.keys(state.answers).filter(key => state.answers[key] !== null && state.answers[key] !== undefined).length;
 
-                gtag('event', 'quiz_registration_completed', {
+                gtag('event', 'quiz_registration_completed_novoice', {
                     quiz_name: 'personality_quiz',
                     user_id: response.data.user?.user_id || response.data.user?.id || null,
                     email: email,
@@ -1546,7 +1530,7 @@ window.registerUser = async function() {
             setTimeout(() => {
                 showLoading(false);
             }, 500);
-                gtag('event', 'quiz_all_questions_completed', {
+                gtag('event', 'quiz_all_questions_completed_novoice', {
                     quiz_name: 'personality_quiz',
                     total_questions: totalQuestions
                 });
