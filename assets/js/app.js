@@ -2,7 +2,7 @@ const flow = [
     {
         type: 'ageGate',
         id: 'ageGate',
-        title: 'Choose your age group',
+        title: 'Choose your age group', 
         note: 'By continuing, you confirm you have read and agreed to our <a href="/privacy">Terms of Use</a>, Privacy Policy, and Refund Policy.',
         options: [
             { label: '25-49', value: '25_49' },
@@ -460,7 +460,7 @@ function renderAgeGate(item) {
 
     host.innerHTML = `
     <section class="screen-card age-gate-card fade-in">
-      <h2 class="question-title age-title">${item.title}</h2>
+                <div class="eyebrow">3-MINUTE QUIZ - ONE ETERNAL MEMORY</div>
       <div class="age-grid">
         ${item.options.map(opt => `
           <button class="age-option" type="button" data-value="${opt.value}">
@@ -693,7 +693,7 @@ function renderVoiceDemo(targetHost = host) {
 
     targetHost.innerHTML = `
     <section class="screen-card voice-demo-card fade-in">
-      <div class="eyebrow">Voice preview</div>
+      <div class="eyebrow">AI Voice Preview</div>
       <h2 class="question-title">Hear how your avatar can sound</h2>
       <p class="form-note mb-3">Upload your audio (up to 1 MB) or record a 20-second sample in browser.</p>
 
@@ -1032,7 +1032,7 @@ function renderPaywall() {
           <summary>
             <span class="demo-summary-icon" aria-hidden="true"><i class="bi bi-mic"></i></span>
             <span>
-              <strong>Clone your loved one's voice (optional)</strong>
+              <strong>Try a Voice Clone Demo</strong>
               <small>Open to upload or record a short sample.</small>
             </span>
             <span class="demo-summary-chevron" aria-hidden="true"><i class="bi bi-chevron-down"></i></span>
@@ -1324,7 +1324,7 @@ function renderCurrentStep() {
   stopInterstitialSlider();
 
   const item = flow[state.step];
-  heroNote.classList.toggle('hidden', state.step > 0);
+  heroNote?.classList.toggle('hidden', state.step > 0);
 
   if (item.type === 'question') return renderQuestion(item);
   if (item.type === 'ageGate') return renderAgeGate(item);
@@ -1381,7 +1381,7 @@ function prevStep() {
   renderCurrentStep();
 }
 
-continueBtn.addEventListener('click', async () => {
+continueBtn?.addEventListener('click', async () => {
     const current = flow[state.step];
 
     if (current.type === 'email') {
@@ -1408,7 +1408,7 @@ continueBtn.addEventListener('click', async () => {
     nextStep();
 });
 
-backBtn.addEventListener('click', prevStep);
+backBtn?.addEventListener('click', prevStep);
 
 document.body.insertAdjacentHTML('beforeend', `
   <div class="modal fade" id="fallbackCheckoutModal" tabindex="-1" aria-hidden="true">
