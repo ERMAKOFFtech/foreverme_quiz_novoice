@@ -316,6 +316,12 @@ const state = {
     registrationStartedTracked: false
 };
 
+function trackMetaEvent(eventName, params = {}) {
+    if (typeof fbq !== 'function') return;
+
+    fbq('trackCustom', `meta_${eventName}`, params);
+}
+
 
 
 
@@ -336,6 +342,10 @@ let timerInterval = null;
 let promoTimerInterval = null;
 let interstitialSliderInterval = null;
 gtag('event', 'quiz_started_novoice', {
+    quiz_name: 'personality_quiz',
+    total_questions: totalQuestions
+});
+trackMetaEvent('quiz_started_novoice', {
     quiz_name: 'personality_quiz',
     total_questions: totalQuestions
 });
@@ -425,6 +435,14 @@ function renderQuestion(item) {
 
 
                 gtag('event', 'quiz_question_answered_novoice', {
+                    quiz_name: 'personality_quiz',
+                    question_number: qNumber,
+                    question_key: item.id,
+                    question_type: item.type,
+                    answer_value: value,
+                    progress_percent: progressPercent
+                });
+                trackMetaEvent('quiz_question_answered_novoice', {
                     quiz_name: 'personality_quiz',
                     question_number: qNumber,
                     question_key: item.id,
@@ -922,6 +940,9 @@ function renderEmail() {
       gtag('event', 'quiz_registration_started__novoice', {
           quiz_name: 'personality_quiz'
       });
+      trackMetaEvent('quiz_registration_started__novoice', {
+          quiz_name: 'personality_quiz'
+      });
   }, { once: true });
   validate();
 
@@ -1273,6 +1294,11 @@ async function handleStripeSubmit() {
                     currency: 'USD',
                     transaction_id: paymentIntent.id
                 });
+                trackMetaEvent('quiz_purchase_complete_novoice', {
+                    value: 29.99,
+                    currency: 'USD',
+                    transaction_id: paymentIntent.id
+                });
                 showToast('Payment successful! Redirecting...', 'success');
 
                 setTimeout(() => {
@@ -1483,10 +1509,24 @@ window.addEventListener('beforeunload', function() {
                 completion_rate: completionRate,
                 answers_count: answeredQuestionsCount
             });
+            trackMetaEvent('quiz_abandoned_novoice', {
+                quiz_name: 'personality_quiz',
+                last_question: lastQuestionNumber,
+                total_questions: totalQuestions,
+                completion_rate: completionRate,
+                answers_count: answeredQuestionsCount
+            });
     }
 
     if (isOnEmail) {
         gtag('event', 'quiz_abandoned_email_novoice', {
+            quiz_name: 'personality_quiz',
+            last_question: answeredQuestionsCount,
+            total_questions: totalQuestions,
+            completion_rate: Math.round((answeredQuestionsCount / totalQuestions) * 100),
+            answers_count: answeredQuestionsCount
+        });
+        trackMetaEvent('quiz_abandoned_email_novoice', {
             quiz_name: 'personality_quiz',
             last_question: answeredQuestionsCount,
             total_questions: totalQuestions,
@@ -1524,6 +1564,12 @@ window.registerUser = async function() {
                     email: email,
                     total_answers: totalAnswersCount
                 });
+                trackMetaEvent('quiz_registration_completed_novoice', {
+                    quiz_name: 'personality_quiz',
+                    user_id: response.data.user?.user_id || response.data.user?.id || null,
+                    email: email,
+                    total_answers: totalAnswersCount
+                });
 
             showToast('Registration successful!', 'success');
 
@@ -1531,6 +1577,10 @@ window.registerUser = async function() {
                 showLoading(false);
             }, 500);
                 gtag('event', 'quiz_all_questions_completed_novoice', {
+                    quiz_name: 'personality_quiz',
+                    total_questions: totalQuestions
+                });
+                trackMetaEvent('quiz_all_questions_completed_novoice', {
                     quiz_name: 'personality_quiz',
                     total_questions: totalQuestions
                 });
